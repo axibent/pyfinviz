@@ -43,18 +43,9 @@ class WebScraper:
     '''
 
     @staticmethod
-    def get_single_table_pandas(main_url):
+    def get_single_table_pandas(main_url, table_class_name): 
         soup = WebScraper.get_soup(main_url)
-        td = soup.find("td", {"class": "table-top"})
-        if td is None:
-            return soup, pd.DataFrame()
-        main_table_rows = td.find_parent("table").find_all("tr")
-        table_header = [re.sub(r'[^a-zA-Z0-9]', '', td.text.strip()) for td in
-                        main_table_rows[0].find_all("td", recursive=False)]
-
-        table_info_arr = [[td.text.strip() for td in row.find_all("td", recursive=False)] for row in
-                          main_table_rows[1:]]
-        table_info_arr = [row for row in table_info_arr if len(row) == len(table_header)]  # removed unmatched rows
-        table_info_array = np.asarray(table_info_arr)
-
-        return soup, pd.DataFrame(table_info_array, columns=table_header)
+        table = soup.find("table", {"class": table_class_name})
+        if table is None: 
+            raise ValueError(f"Table Element with class name {table} not found") 
+            df = pd.read_html(StringIO(str(table)))[0] return soup, df
