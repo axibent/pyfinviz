@@ -48,4 +48,5 @@ class WebScraper:
         table = soup.find("table", {"class": table_class_name})
         if table is None: 
             raise ValueError(f"Table Element with class name {table} not found") 
-            df = pd.read_html(StringIO(str(table)))[0] return soup, df
+            df = pd.read_html(StringIO(str(table)))[0] 
+            return soup, df
